@@ -19,10 +19,10 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.z = 15;
-camera.position.y = 7;
+camera.position.z = 16;
+camera.position.y = 5.0;
 
-const light = new THREE.DirectionalLight(0xffffff, 1.0);
+/*const light = new THREE.DirectionalLight(0xffffff, 1.0);
 light.position.set(12, 12, 7);
 light.castShadow = true; // default false
 light.shadow.normalBias = 1e-2;
@@ -34,9 +34,9 @@ light.shadow.camera.near = 0.5;
 light.shadow.camera.far = 100;
 
 // Camera
-scene.add(light);
+scene.add(light);*/
 
-const SKY_COLOR = 0x0e0353;
+/*const SKY_COLOR = 0x0e0353;
 const GROUND_COLOR = 0xd5f3ed;
 const SKY_SIZE = 100;
 
@@ -70,7 +70,7 @@ const skyMat = new ShaderMaterial({
   side: THREE.BackSide,
 });
 const sky = new THREE.Mesh(skyGeo, skyMat);
-scene.add(sky);
+scene.add(sky);*/
 
 // Load hdr
 new EXRLoader().load(
@@ -96,8 +96,8 @@ new EXRLoader().load(
     const mesh = new THREE.Mesh(quad, material);*/
     texture.mapping = THREE.EquirectangularReflectionMapping;
 
-    //scene.background = texture; // Use hdr as background
-    scene.environment = texture; // This do the lighting
+    scene.background = texture; // Use hdr as background
+    //scene.environment = texture; // This do the lighting
 
     render();
   }
@@ -124,6 +124,7 @@ loader.load(
   "models/gallery.glb",
   function (gltf) {
     gltf.scene.traverse(function (child) {
+      console.log(child.name);
       if ((child as THREE.Mesh).isMesh) {
         const m = child as THREE.Mesh;
         m.receiveShadow = true;
@@ -132,10 +133,16 @@ loader.load(
       if ((child as THREE.Light).isLight) {
         const l = child as THREE.Light;
         l.castShadow = true;
+        l.intensity = l.intensity * 0.001; // Scaling from blender
         l.shadow.bias = -0.003;
         l.shadow.mapSize.width = 2048;
         l.shadow.mapSize.height = 2048;
       }
+      /*if ((child as THREE.Camera).isCamera) {
+        camera.position.x = child.position.x;
+        camera.position.y = child.position.y;
+        camera.position.z = child.position.z;
+      }*/
     });
     scene.add(gltf.scene);
   },
@@ -159,13 +166,20 @@ const stats = Stats();
 document.body.appendChild(stats.dom);
 
 const gui = new GUI();
-const LightFolder = gui.addFolder("Light");
+/*const LightFolder = gui.addFolder("Light");
 LightFolder.add(light.position, "x", -30, 30);
 LightFolder.add(light.position, "y", -30, 30);
 LightFolder.add(light.position, "z", -30, 30);
-LightFolder.open();
+LightFolder.open();*/
 const cameraFolder = gui.addFolder("Camera");
 cameraFolder.add(camera.position, "z", 0, 10);
+
+cameraFolder
+  .add(camera, "fov", 0, 150)
+  .onChange(function (newvalue) {
+    camera.updateProjectionMatrix();
+  })
+  .name("camera.fov");
 cameraFolder.open();
 
 function animate() {
