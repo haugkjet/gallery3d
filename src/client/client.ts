@@ -8,7 +8,7 @@ import { GUI } from "dat.gui";
 import { ShaderMaterial, Vector2, Vector3 } from "three";
 
 const params = {
-  exposure: 1.5,
+  exposure: 1.0,
 };
 
 const scene = new THREE.Scene();
@@ -21,6 +21,9 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.z = 16;
 camera.position.y = 5.0;
+
+var light = new THREE.AmbientLight(0x404040, 1.0);
+scene.add(light);
 
 /*const light = new THREE.DirectionalLight(0xffffff, 1.0);
 light.position.set(12, 12, 7);
@@ -36,7 +39,7 @@ light.shadow.camera.far = 100;
 // Camera
 scene.add(light);*/
 
-/*const SKY_COLOR = 0x0e0353;
+const SKY_COLOR = 0x0e0353;
 const GROUND_COLOR = 0xd5f3ed;
 const SKY_SIZE = 100;
 
@@ -70,7 +73,7 @@ const skyMat = new ShaderMaterial({
   side: THREE.BackSide,
 });
 const sky = new THREE.Mesh(skyGeo, skyMat);
-scene.add(sky);*/
+scene.add(sky);
 
 // Load hdr
 new EXRLoader().load(
@@ -93,10 +96,18 @@ new EXRLoader().load(
       1.5
     );
 
-    const mesh = new THREE.Mesh(quad, material);*/
+    const mesh = newrenderer.physicallyCorrectLights = true;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+renderer.toneMapping = THREE.ReinhardToneMapping;
+renderer.toneMappingExposure = params.exposure;
+
+renderer.outputEncoding = THREE.sRGBEncoding;
+ THREE.Mesh(quad, material);*/
     texture.mapping = THREE.EquirectangularReflectionMapping;
 
-    scene.background = texture; // Use hdr as background
+    //scene.background = texture; // Use hdr as background
     //scene.environment = texture; // This do the lighting
 
     render();
@@ -105,6 +116,15 @@ new EXRLoader().load(
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+//renderer.physicallyCorrectLights = true;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+//renderer.toneMapping = THREE.ReinhardToneMapping;
+//renderer.toneMappingExposure = params.exposure;
+
+renderer.outputEncoding = THREE.sRGBEncoding;
+
 document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -133,7 +153,7 @@ loader.load(
       if ((child as THREE.Light).isLight) {
         const l = child as THREE.Light;
         l.castShadow = true;
-        l.intensity = l.intensity * 0.001; // Scaling from blender
+        l.intensity = l.intensity * 0.00035; // Scaling from blender
         l.shadow.bias = -0.003;
         l.shadow.mapSize.width = 2048;
         l.shadow.mapSize.height = 2048;
