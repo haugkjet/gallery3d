@@ -18,12 +18,12 @@ const scene = new THREE.Scene();
 const clock = new THREE.Clock(true);
 
 const camera = new THREE.PerspectiveCamera(
-  75,
+  55,
   window.innerWidth / window.innerHeight,
   0.1,
   1500
 );
-camera.position.z = 16;
+camera.position.z = 60;
 camera.position.y = 5.0;
 
 var light = new THREE.AmbientLight(0x404040, 1.0);
@@ -254,6 +254,100 @@ loader.load(
         m.receiveShadow = true;
         m.castShadow = true;
         objects.push(m);
+
+        if (m.name.includes("Slot1")) {
+          const texture = new THREE.TextureLoader().load(
+            "pictures/axel-ruffini-iulnjpZyWnc-unsplash.jpg"
+          );
+          let material = new THREE.MeshStandardMaterial({ map: texture });
+          if (m.material) {
+            m.material = material;
+          }
+
+          // plane
+          var slot1 = new THREE.Mesh(new THREE.PlaneGeometry(7, 8), material);
+
+          slot1.position.x = m.position.x - 2.5;
+          slot1.position.y = m.position.y - 4;
+          slot1.position.z = m.position.z - 23.93;
+
+          scene.add(slot1);
+
+          /*var plane = new THREE.Mesh(new THREE.PlaneGeometry(9, 10),material);*/
+
+          m.receiveShadow = true;
+          m.userData.ground = true;
+        }
+        if (m.name.includes("Slot2")) {
+          const texture = new THREE.TextureLoader().load(
+            "pictures/komarov-egor-d4SN2Yitp6Q-unsplash.jpg"
+          );
+          let material = new THREE.MeshStandardMaterial({ map: texture });
+          if (m.material) {
+            m.material = material;
+          }
+
+          // plane
+          var slot2 = new THREE.Mesh(new THREE.PlaneGeometry(7, 8), material);
+
+          slot2.position.x = m.position.x - 2.5;
+          slot2.position.y = m.position.y - 4;
+          slot2.position.z = m.position.z - 23.93;
+
+          scene.add(slot2);
+
+          /*var plane = new THREE.Mesh(new THREE.PlaneGeometry(9, 10),material);*/
+
+          m.receiveShadow = true;
+          m.userData.ground = true;
+        }
+        if (m.name.includes("Slot3")) {
+          const texture = new THREE.TextureLoader().load(
+            "pictures/enzo-tommasi-wlxJ4idMTUk-unsplash.jpg"
+          );
+          let material = new THREE.MeshStandardMaterial({ map: texture });
+          if (m.material) {
+            m.material = material;
+          }
+
+          // plane
+          var slot3 = new THREE.Mesh(new THREE.PlaneGeometry(7, 8), material);
+
+          slot3.position.x = m.position.x - 2.5;
+          slot3.position.y = m.position.y - 4;
+          slot3.position.z = m.position.z - 23.93;
+
+          scene.add(slot3);
+
+          /*var plane = new THREE.Mesh(new THREE.PlaneGeometry(9, 10),material);*/
+
+          m.receiveShadow = true;
+          m.userData.ground = true;
+        }
+        if (m.name.includes("Slot4")) {
+          const texture = new THREE.TextureLoader().load(
+            "pictures/luis-alfonso-orellana-WjIB-6UxA5Q-unsplash.jpg"
+          );
+          let material = new THREE.MeshStandardMaterial({ map: texture });
+          if (m.material) {
+            m.material = material;
+          }
+
+          m.receiveShadow = true;
+          m.userData.ground = true;
+        }
+        if (m.name.includes("Slot5")) {
+          const texture = new THREE.TextureLoader().load(
+            "pictures/sharon-mccutcheon-TZZwC_xsClY-unsplash.jpg"
+          );
+          let material = new THREE.MeshStandardMaterial({ map: texture });
+          if (m.material) {
+            m.material = material;
+          }
+
+          m.receiveShadow = true;
+          m.userData.ground = true;
+        }
       }
       if ((child as THREE.Light).isLight) {
         const l = child as THREE.Light;
