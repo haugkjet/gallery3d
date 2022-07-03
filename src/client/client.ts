@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
 import { GUI } from "dat.gui";
@@ -8,10 +9,12 @@ import { GUI } from "dat.gui";
 import { ShaderMaterial, Vector2, Vector3 } from "three";
 
 const params = {
-  exposure: 1.0,
+  exposure: 0.5,
 };
 
 const scene = new THREE.Scene();
+
+const clock = new THREE.Clock(true);
 
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -120,6 +123,15 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+const controls = new FirstPersonControls(camera, renderer.domElement);
+
+controls.lookSpeed = 0.0525;
+controls.movementSpeed = 10;
+//controls.noFly = false;
+controls.lookVertical = false;
+//controls.lookAt(0, 3, 0);
+
+//controls.lookAt( scene.position );
 //renderer.toneMapping = THREE.ReinhardToneMapping;
 //renderer.toneMappingExposure = params.exposure;
 
@@ -127,7 +139,7 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 
 document.body.appendChild(renderer.domElement);
 
-const controls = new OrbitControls(camera, renderer.domElement);
+//const controls = new OrbitControls(camera, renderer.domElement);
 //controls.enableDamping = true;
 
 //Light theme
@@ -152,11 +164,11 @@ loader.load(
       }
       if ((child as THREE.Light).isLight) {
         const l = child as THREE.Light;
-        l.castShadow = true;
-        l.intensity = l.intensity * 0.00035; // Scaling from blender
+        l.castShadow = false;
+        l.intensity = l.intensity * 0.00002; // Scaling from blender
         l.shadow.bias = -0.003;
-        l.shadow.mapSize.width = 2048;
-        l.shadow.mapSize.height = 2048;
+        l.shadow.mapSize.width = 1028;
+        l.shadow.mapSize.height = 1028;
       }
       /*if ((child as THREE.Camera).isCamera) {
         camera.position.x = child.position.x;
@@ -180,6 +192,7 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
   render();
+  controls.handleResize();
 }
 
 const stats = Stats();
@@ -205,15 +218,16 @@ cameraFolder.open();
 function animate() {
   requestAnimationFrame(animate);
 
-  //  cube.rotation.x += 0.01;
-  //  cube.rotation.y += 0.01;
+  render();
 
   stats.update();
-
-  render();
 }
 
 function render() {
+  const delta = clock.getDelta();
+
+  controls.update(delta);
+
   renderer.render(scene, camera);
 }
 
