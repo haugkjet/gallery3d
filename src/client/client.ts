@@ -8,6 +8,7 @@ import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
 import { GUI } from "dat.gui";
 
 import { ShaderMaterial, Vector2, Vector3 } from "three";
+import { mapLinear } from "three/src/math/MathUtils";
 
 const params = {
   exposure: 0.5,
@@ -352,7 +353,7 @@ loader.load(
       if ((child as THREE.Light).isLight) {
         const l = child as THREE.Light;
         l.castShadow = false;
-        l.intensity = l.intensity * 0.00002; // Scaling from blender
+        l.intensity = l.intensity * 0.000004; // Scaling from blender
         l.shadow.bias = -0.003;
         l.shadow.mapSize.width = 1028;
         l.shadow.mapSize.height = 1028;
