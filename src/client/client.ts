@@ -19,13 +19,12 @@ const scene = new THREE.Scene();
 const clock = new THREE.Clock(true);
 
 const camera = new THREE.PerspectiveCamera(
-  55,
+  70,
   window.innerWidth / window.innerHeight,
   0.1,
   1500
 );
-camera.position.z = 60;
-camera.position.y = 5.0;
+camera.position.z = 30;
 
 var light = new THREE.AmbientLight(0x404040, 1.0);
 scene.add(light);
@@ -190,9 +189,9 @@ const onKeyDown = function (event: any) {
 
     case "Space":
       camera.position.z = 16;
-      camera.position.y = 5.0;
+      camera.position.y = 15.0;
       camera.position.x = 0.0;
-      camera.lookAt(0, 0, 0);
+      camera.lookAt(0, 10, 0);
       break;
   }
 };
@@ -426,8 +425,8 @@ function animate() {
   direction.x = Number(moveRight) - Number(moveLeft);
   direction.normalize(); // this ensures consistent movements in all directions
 
-  if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
-  if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+  if (moveForward || moveBackward) velocity.z -= direction.z * 800.0 * delta;
+  if (moveLeft || moveRight) velocity.x -= direction.x * 800.0 * delta;
 
   if (onObject === true) {
     velocity.y = Math.max(0, velocity.y);
