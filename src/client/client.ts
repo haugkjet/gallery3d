@@ -243,6 +243,56 @@ const material = new THREE.MeshBasicMaterial({
   wireframe: true,
 });
 
+// Init
+// Make empty array to contain urls
+let dogUrl1: any;
+
+fetch("https://dog.ceo/api/breeds/image/random")
+  .then((response) => response.json())
+  .then((data) => {
+    dogUrl1 = data.message;
+    console.log(dogUrl1);
+  });
+
+let dogUrl2: any;
+
+fetch("https://dog.ceo/api/breeds/image/random")
+  .then((response) => response.json())
+  .then((data) => {
+    dogUrl2 = data.message;
+    console.log(dogUrl2);
+  });
+
+let dogUrl3: any;
+
+fetch("https://dog.ceo/api/breeds/image/random")
+  .then((response) => response.json())
+  .then((data) => {
+    dogUrl3 = data.message;
+    console.log(dogUrl3);
+  });
+
+let dogUrl4: any;
+
+fetch("https://dog.ceo/api/breeds/image/random")
+  .then((response) => response.json())
+  .then((data) => {
+    dogUrl4 = data.message;
+    console.log(dogUrl5);
+  });
+
+let dogUrl5: any;
+
+fetch("https://dog.ceo/api/breeds/image/random")
+  .then((response) => response.json())
+  .then((data) => {
+    dogUrl5 = data.message;
+    console.log(dogUrl5);
+  });
+
+// Read 5 entries from dogs api and push the result (parse to find url) to the array.
+// Use the URLs from the table in slot1 to 5.
+
 const loader = new GLTFLoader();
 loader.load(
   "models/gallery.glb",
@@ -256,9 +306,7 @@ loader.load(
         objects.push(m);
 
         if (m.name.includes("Slot1")) {
-          const texture = new THREE.TextureLoader().load(
-            "https://images.dog.ceo/breeds/bullterrier-staffordshire/caesar.jpg"
-          );
+          const texture = new THREE.TextureLoader().load(dogUrl1);
           let material = new THREE.MeshStandardMaterial({ map: texture });
           if (m.material) {
             m.material = material;
@@ -271,9 +319,7 @@ loader.load(
         }
 
         if (m.name.includes("Slot2")) {
-          const texture = new THREE.TextureLoader().load(
-            "https://images.dog.ceo/breeds/ovcharka-caucasian/IMG_20190628_144817.jpg"
-          );
+          const texture = new THREE.TextureLoader().load(dogUrl2);
           let material = new THREE.MeshStandardMaterial({ map: texture });
           if (m.material) {
             m.material = material;
@@ -283,21 +329,14 @@ loader.load(
           m.userData.ground = true;
         }
         if (m.name.includes("Slot3")) {
-          const texture = new THREE.TextureLoader().load(
-            "https://images.dog.ceo/breeds/vizsla/n02100583_3944.jpg"
-          );
+          const texture = new THREE.TextureLoader().load(dogUrl3);
           let material = new THREE.MeshStandardMaterial({ map: texture });
           if (m.material) {
             m.material = material;
           }
-
-          m.receiveShadow = true;
-          m.userData.ground = true;
         }
         if (m.name.includes("Slot4")) {
-          const texture = new THREE.TextureLoader().load(
-            "https://images.dog.ceo/breeds/komondor/n02105505_3652.jpg"
-          );
+          const texture = new THREE.TextureLoader().load(dogUrl4);
           let material = new THREE.MeshStandardMaterial({ map: texture });
           if (m.material) {
             m.material = material;
@@ -307,9 +346,7 @@ loader.load(
           m.userData.ground = true;
         }
         if (m.name.includes("Slot5")) {
-          const texture = new THREE.TextureLoader().load(
-            "https://images.dog.ceo/breeds/terrier-fox/n02095314_2876.jpg"
-          );
+          const texture = new THREE.TextureLoader().load(dogUrl5);
           let material = new THREE.MeshStandardMaterial({ map: texture });
           if (m.material) {
             m.material = material;
@@ -355,13 +392,13 @@ function onWindowResize() {
 const stats = Stats();
 document.body.appendChild(stats.dom);
 
-const gui = new GUI();
+//const gui = new GUI();
 /*const LightFolder = gui.addFolder("Light");
 LightFolder.add(light.position, "x", -30, 30);
 LightFolder.add(light.position, "y", -30, 30);
 LightFolder.add(light.position, "z", -30, 30);
 LightFolder.open();*/
-const cameraFolder = gui.addFolder("Camera");
+/*const cameraFolder = gui.addFolder("Camera");
 cameraFolder.add(camera.position, "z", 0, 10);
 
 cameraFolder
@@ -370,7 +407,7 @@ cameraFolder
     camera.updateProjectionMatrix();
   })
   .name("camera.fov");
-cameraFolder.open();
+cameraFolder.open();*/
 
 function animate() {
   requestAnimationFrame(animate);
