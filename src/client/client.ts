@@ -257,76 +257,46 @@ loader.load(
 
         if (m.name.includes("Slot1")) {
           const texture = new THREE.TextureLoader().load(
-            "pictures/axel-ruffini-iulnjpZyWnc-unsplash.jpg"
+            "https://images.dog.ceo/breeds/bullterrier-staffordshire/caesar.jpg"
           );
           let material = new THREE.MeshStandardMaterial({ map: texture });
           if (m.material) {
             m.material = material;
           }
-
-          // plane
-          var slot1 = new THREE.Mesh(new THREE.PlaneGeometry(7, 8), material);
-
-          slot1.position.x = m.position.x - 2.5;
-          slot1.position.y = m.position.y - 4;
-          slot1.position.z = m.position.z - 23.93;
-
-          scene.add(slot1);
 
           /*var plane = new THREE.Mesh(new THREE.PlaneGeometry(9, 10),material);*/
 
           m.receiveShadow = true;
           m.userData.ground = true;
         }
+
         if (m.name.includes("Slot2")) {
           const texture = new THREE.TextureLoader().load(
-            "pictures/komarov-egor-d4SN2Yitp6Q-unsplash.jpg"
+            "https://images.dog.ceo/breeds/ovcharka-caucasian/IMG_20190628_144817.jpg"
           );
           let material = new THREE.MeshStandardMaterial({ map: texture });
           if (m.material) {
             m.material = material;
           }
-
-          // plane
-          var slot2 = new THREE.Mesh(new THREE.PlaneGeometry(7, 8), material);
-
-          slot2.position.x = m.position.x - 2.5;
-          slot2.position.y = m.position.y - 4;
-          slot2.position.z = m.position.z - 23.93;
-
-          scene.add(slot2);
-
-          /*var plane = new THREE.Mesh(new THREE.PlaneGeometry(9, 10),material);*/
 
           m.receiveShadow = true;
           m.userData.ground = true;
         }
         if (m.name.includes("Slot3")) {
           const texture = new THREE.TextureLoader().load(
-            "pictures/enzo-tommasi-wlxJ4idMTUk-unsplash.jpg"
+            "https://images.dog.ceo/breeds/vizsla/n02100583_3944.jpg"
           );
           let material = new THREE.MeshStandardMaterial({ map: texture });
           if (m.material) {
             m.material = material;
           }
 
-          // plane
-          var slot3 = new THREE.Mesh(new THREE.PlaneGeometry(7, 8), material);
-
-          slot3.position.x = m.position.x - 2.5;
-          slot3.position.y = m.position.y - 4;
-          slot3.position.z = m.position.z - 23.93;
-
-          scene.add(slot3);
-
-          /*var plane = new THREE.Mesh(new THREE.PlaneGeometry(9, 10),material);*/
-
           m.receiveShadow = true;
           m.userData.ground = true;
         }
         if (m.name.includes("Slot4")) {
           const texture = new THREE.TextureLoader().load(
-            "pictures/luis-alfonso-orellana-WjIB-6UxA5Q-unsplash.jpg"
+            "https://images.dog.ceo/breeds/komondor/n02105505_3652.jpg"
           );
           let material = new THREE.MeshStandardMaterial({ map: texture });
           if (m.material) {
@@ -338,7 +308,7 @@ loader.load(
         }
         if (m.name.includes("Slot5")) {
           const texture = new THREE.TextureLoader().load(
-            "pictures/sharon-mccutcheon-TZZwC_xsClY-unsplash.jpg"
+            "https://images.dog.ceo/breeds/terrier-fox/n02095314_2876.jpg"
           );
           let material = new THREE.MeshStandardMaterial({ map: texture });
           if (m.material) {
