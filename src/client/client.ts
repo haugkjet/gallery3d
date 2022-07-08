@@ -1,22 +1,15 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-
 import { PointerLockControls } from "three/examples/jsm/controls//PointerLockControls.js";
-import Stats from "three/examples/jsm/libs/stats.module";
-import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
+
+//import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
 import { GUI } from "dat.gui";
 
-import { ShaderMaterial, Vector2, Vector3 } from "three";
-import { mapLinear } from "three/src/math/MathUtils";
+import { ShaderMaterial } from "three";
 
-const params = {
-  exposure: 0.5,
-};
+import Stats from "three/examples/jsm/libs/stats.module";
 
 const scene = new THREE.Scene();
-
-const clock = new THREE.Clock(true);
 
 const camera = new THREE.PerspectiveCamera(
   70,
@@ -29,34 +22,7 @@ camera.position.z = 30;
 var light = new THREE.AmbientLight(0x404040, 1.0);
 scene.add(light);
 
-let moveForward = false;
-let moveBackward = false;
-let moveLeft = false;
-let moveRight = false;
-let canJump = false;
-
-let prevTime = performance.now();
-const velocity = new THREE.Vector3();
-const direction = new THREE.Vector3();
-const vertex = new THREE.Vector3();
-const color = new THREE.Color();
-
-const objects: any = [];
-
-/*const light = new THREE.DirectionalLight(0xffffff, 1.0);
-light.position.set(12, 12, 7);
-light.castShadow = true; // default false
-light.shadow.normalBias = 1e-2;
-light.shadow.bias = -1e-3;
-
-light.shadow.mapSize.width = 1024;
-light.shadow.mapSize.height = 1024;
-light.shadow.camera.near = 0.5;
-light.shadow.camera.far = 100;
-
-// Camera
-scene.add(light);*/
-
+// Init skybox
 const SKY_COLOR = 0x0e0353;
 const GROUND_COLOR = 0xd5f3ed;
 const SKY_SIZE = 950;
@@ -106,12 +72,25 @@ scene.add(sky);
   }
 );*/
 
+// Setup renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-//renderer.physicallyCorrectLights = true;
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputEncoding = THREE.sRGBEncoding;
+document.body.appendChild(renderer.domElement);
 
+// Setup PointerLockControls
+// Code from examples/misc_controls_pointerlock
+let moveForward = false;
+let moveBackward = false;
+let moveLeft = false;
+let moveRight = false;
+let canJump = false;
+
+let prevTime = performance.now();
+const velocity = new THREE.Vector3();
+const direction = new THREE.Vector3();
+
+const objects: any = [];
 const controls = new PointerLockControls(camera, renderer.domElement);
 let raycaster = new THREE.Raycaster(
   new THREE.Vector3(),
@@ -197,30 +176,8 @@ const onKeyUp = function (event: any) {
 document.addEventListener("keydown", onKeyDown);
 document.addEventListener("keyup", onKeyUp);
 
-//controls.lookAt( scene.position );
-//renderer.toneMapping = THREE.ReinhardToneMapping;
-//renderer.toneMappingExposure = params.exposure;
-
-renderer.outputEncoding = THREE.sRGBEncoding;
-
-document.body.appendChild(renderer.domElement);
-
-//const controls = new OrbitControls(camera, renderer.domElement);
-//controls.enableDamping = true;
-
-//Light theme
-//scene.background = new THREE.Color(0xd9d9d9);
-
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({
-  color: 0x00ff00,
-  wireframe: true,
-});
-
-// Init
-// Make empty array to contain urls
+// Get array dog urls
 let dogUrls: string;
-
 fetch("https://dog.ceo/api/breeds/image/random/5")
   .then((response) => response.json())
   .then((data) => {
@@ -228,7 +185,7 @@ fetch("https://dog.ceo/api/breeds/image/random/5")
     loadgltf(dogUrls);
   });
 
-// Use the URLs from the table in slot1 to 5.
+// Load gltf and populate frames with dog pictures from URl list
 function loadgltf(dogUrls: string) {
   const loader = new GLTFLoader();
   loader.load(
@@ -238,10 +195,7 @@ function loadgltf(dogUrls: string) {
         console.log(child.name);
         if ((child as THREE.Mesh).isMesh) {
           const m = child as THREE.Mesh;
-          m.receiveShadow = true;
-          m.castShadow = true;
           objects.push(m);
-
           if (m.name.includes("Slot1")) {
             const texture = new THREE.TextureLoader().load(dogUrls[0]);
             let material = new THREE.MeshStandardMaterial({ map: texture });
@@ -249,7 +203,6 @@ function loadgltf(dogUrls: string) {
               m.material = material;
             }
           }
-
           if (m.name.includes("Slot2")) {
             const texture = new THREE.TextureLoader().load(dogUrls[1]);
             let material = new THREE.MeshStandardMaterial({ map: texture });
@@ -283,9 +236,6 @@ function loadgltf(dogUrls: string) {
           const l = child as THREE.Light;
           l.castShadow = false;
           l.intensity = l.intensity * 0.000004; // Scaling from blender
-          l.shadow.bias = -0.003;
-          l.shadow.mapSize.width = 1028;
-          l.shadow.mapSize.height = 1028;
         }
       });
       scene.add(gltf.scene);
@@ -298,7 +248,6 @@ function loadgltf(dogUrls: string) {
     }
   );
 }
-//loadgltf();
 
 window.addEventListener("resize", onWindowResize, false);
 function onWindowResize() {
@@ -313,8 +262,6 @@ const stats = Stats();
 document.body.appendChild(stats.dom);
 
 //const gui = new GUI();
-/*const LightFolder = gui.addFolconsole.log("XXXXXXXXX" + dogUrls[0]);"z", -30, 30);
-LightFolder.open();*/
 /*const cameraFolder = gui.addFolder("Camera");
 cameraFolder.add(camera.position, "z", 0, 10);
 
@@ -328,6 +275,8 @@ cameraFolder.open();*/
 
 function animate() {
   requestAnimationFrame(animate);
+
+  // Code from examples/misc_controls_pointerlock
 
   const time = performance.now();
 
@@ -365,7 +314,6 @@ function animate() {
   if (controls.getObject().position.y < 10) {
     velocity.y = 0;
     controls.getObject().position.y = 10;
-
     canJump = true;
   }
 
