@@ -219,7 +219,7 @@ const material = new THREE.MeshBasicMaterial({
 
 // Init
 // Make empty array to contain urls
-let dogUrls: any;
+let dogUrls: string;
 
 fetch("https://dog.ceo/api/breeds/image/random/5")
   .then((response) => response.json())
@@ -228,9 +228,8 @@ fetch("https://dog.ceo/api/breeds/image/random/5")
     loadgltf(dogUrls);
   });
 
-// Read 5 entries from dogs api and push the result (parse to find url) to the array.
 // Use the URLs from the table in slot1 to 5.
-function loadgltf(dogUrls: any) {
+function loadgltf(dogUrls: string) {
   const loader = new GLTFLoader();
   loader.load(
     "models/gallery.glb",
