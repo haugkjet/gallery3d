@@ -97,33 +97,7 @@ scene.add(sky);
 new EXRLoader().load(
   "textures/forest.exr",
   function (texture: any, textureData: any) {
-    // memorial.exr is NPOT
-
-    //console.log( textureData );
-    //console.log( texture );
-
-    // EXRLoader sets these default settings
-    //texture.generateMipmaps = false;
-    //texture.minFilter = Lihttps://www.google.com/search?q=git+add&oq=git+add&aqs=chrome..69i57j0i512l6j69i60.1217j0j7&client=ubuntu&sourceid=chrome&ie=UTF-8nearFilter;
-    //texture.magFilter = LinearFilter;
-
-    /*const material = new THREE.MeshBasicMaterial({ map: texture });
-
-    const quad = new THREE.PlaneGeometry(
-      (1.5 * textureData.width) / textureData.height,
-      1.5
-    );
-
-    const mesh = newrenderer.physicallyCorrectLights = true;
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-renderer.toneMapping = THREE.ReinhardToneMapping;
-renderer.toneMappingExposure = params.exposure;
-
-renderer.outputEncoding = THREE.sRGBEncoding;
- THREE.Mesh(quad, material);*/
-    texture.mapping = THREE.EquirectangularReflectionMapping;
+    //texture.mapping = THREE.EquirectangularReflectionMapping;
 
     //scene.background = texture; // Use hdr as background
     //scene.environment = texture; // This do the lighting
@@ -306,13 +280,13 @@ loader.load(
         objects.push(m);
 
         if (m.name.includes("Slot1")) {
-          const texture = new THREE.TextureLoader().load(dogUrl1);
+          const texture = new THREE.TextureLoader().load(
+            "https://source.unsplash.com/random/?dog"
+          );
           let material = new THREE.MeshStandardMaterial({ map: texture });
           if (m.material) {
             m.material = material;
           }
-
-          /*var plane = new THREE.Mesh(new THREE.PlaneGeometry(9, 10),material);*/
 
           m.receiveShadow = true;
           m.userData.ground = true;
@@ -364,11 +338,6 @@ loader.load(
         l.shadow.mapSize.width = 1028;
         l.shadow.mapSize.height = 1028;
       }
-      /*if ((child as THREE.Camera).isCamera) {
-        camera.position.x = child.position.x;
-        camera.position.y = child.position.y;
-        camera.position.z = child.position.z;
-      }*/
     });
     scene.add(gltf.scene);
   },
@@ -460,10 +429,6 @@ function animate() {
 }
 
 function render() {
-  //const delta = clock.getDelta();
-
-  //controls.update(delta);
-
   renderer.render(scene, camera);
 }
 
