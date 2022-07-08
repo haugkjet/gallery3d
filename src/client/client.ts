@@ -94,7 +94,7 @@ const sky = new THREE.Mesh(skyGeo, skyMat);
 scene.add(sky);
 
 // Load hdr
-new EXRLoader().load(
+/*new EXRLoader().load(
   "textures/forest.exr",
   function (texture: any, textureData: any) {
     //texture.mapping = THREE.EquirectangularReflectionMapping;
@@ -104,7 +104,7 @@ new EXRLoader().load(
 
     render();
   }
-);
+);*/
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -219,135 +219,87 @@ const material = new THREE.MeshBasicMaterial({
 
 // Init
 // Make empty array to contain urls
-let dogUrl1: any;
+let dogUrls: any;
 
-fetch("https://dog.ceo/api/breeds/image/random")
+fetch("https://dog.ceo/api/breeds/image/random/5")
   .then((response) => response.json())
   .then((data) => {
-    dogUrl1 = data.message;
-    console.log(dogUrl1);
-  });
-
-let dogUrl2: any;
-
-fetch("https://dog.ceo/api/breeds/image/random")
-  .then((response) => response.json())
-  .then((data) => {
-    dogUrl2 = data.message;
-    console.log(dogUrl2);
-  });
-
-let dogUrl3: any;
-
-fetch("https://dog.ceo/api/breeds/image/random")
-  .then((response) => response.json())
-  .then((data) => {
-    dogUrl3 = data.message;
-    console.log(dogUrl3);
-  });
-
-let dogUrl4: any;
-
-fetch("https://dog.ceo/api/breeds/image/random")
-  .then((response) => response.json())
-  .then((data) => {
-    dogUrl4 = data.message;
-    console.log(dogUrl5);
-  });
-
-let dogUrl5: any;
-
-fetch("https://dog.ceo/api/breeds/image/random")
-  .then((response) => response.json())
-  .then((data) => {
-    dogUrl5 = data.message;
-    console.log(dogUrl5);
+    dogUrls = data.message;
+    loadgltf(dogUrls);
   });
 
 // Read 5 entries from dogs api and push the result (parse to find url) to the array.
 // Use the URLs from the table in slot1 to 5.
-
-const loader = new GLTFLoader();
-loader.load(
-  "models/gallery.glb",
-  function (gltf) {
-    gltf.scene.traverse(function (child) {
-      console.log(child.name);
-      if ((child as THREE.Mesh).isMesh) {
-        const m = child as THREE.Mesh;
-        m.receiveShadow = true;
-        m.castShadow = true;
-        objects.push(m);
-
-        if (m.name.includes("Slot1")) {
-          const texture = new THREE.TextureLoader().load(
-            "https://source.unsplash.com/random/?dog"
-          );
-          let material = new THREE.MeshStandardMaterial({ map: texture });
-          if (m.material) {
-            m.material = material;
-          }
-
+function loadgltf(dogUrls: any) {
+  const loader = new GLTFLoader();
+  loader.load(
+    "models/gallery.glb",
+    function (gltf) {
+      gltf.scene.traverse(function (child) {
+        console.log(child.name);
+        if ((child as THREE.Mesh).isMesh) {
+          const m = child as THREE.Mesh;
           m.receiveShadow = true;
-          m.userData.ground = true;
-        }
+          m.castShadow = true;
+          objects.push(m);
 
-        if (m.name.includes("Slot2")) {
-          const texture = new THREE.TextureLoader().load(dogUrl2);
-          let material = new THREE.MeshStandardMaterial({ map: texture });
-          if (m.material) {
-            m.material = material;
+          if (m.name.includes("Slot1")) {
+            const texture = new THREE.TextureLoader().load(dogUrls[0]);
+            let material = new THREE.MeshStandardMaterial({ map: texture });
+            if (m.material) {
+              m.material = material;
+            }
           }
 
-          m.receiveShadow = true;
-          m.userData.ground = true;
-        }
-        if (m.name.includes("Slot3")) {
-          const texture = new THREE.TextureLoader().load(dogUrl3);
-          let material = new THREE.MeshStandardMaterial({ map: texture });
-          if (m.material) {
-            m.material = material;
+          if (m.name.includes("Slot2")) {
+            const texture = new THREE.TextureLoader().load(dogUrls[1]);
+            let material = new THREE.MeshStandardMaterial({ map: texture });
+            if (m.material) {
+              m.material = material;
+            }
+          }
+          if (m.name.includes("Slot3")) {
+            const texture = new THREE.TextureLoader().load(dogUrls[2]);
+            let material = new THREE.MeshStandardMaterial({ map: texture });
+            if (m.material) {
+              m.material = material;
+            }
+          }
+          if (m.name.includes("Slot4")) {
+            const texture = new THREE.TextureLoader().load(dogUrls[3]);
+            let material = new THREE.MeshStandardMaterial({ map: texture });
+            if (m.material) {
+              m.material = material;
+            }
+          }
+          if (m.name.includes("Slot5")) {
+            const texture = new THREE.TextureLoader().load(dogUrls[4]);
+            let material = new THREE.MeshStandardMaterial({ map: texture });
+            if (m.material) {
+              m.material = material;
+            }
           }
         }
-        if (m.name.includes("Slot4")) {
-          const texture = new THREE.TextureLoader().load(dogUrl4);
-          let material = new THREE.MeshStandardMaterial({ map: texture });
-          if (m.material) {
-            m.material = material;
-          }
-
-          m.receiveShadow = true;
-          m.userData.ground = true;
+        if ((child as THREE.Light).isLight) {
+          const l = child as THREE.Light;
+          l.castShadow = false;
+          l.intensity = l.intensity * 0.000004; // Scaling from blender
+          l.shadow.bias = -0.003;
+          l.shadow.mapSize.width = 1028;
+          l.shadow.mapSize.height = 1028;
         }
-        if (m.name.includes("Slot5")) {
-          const texture = new THREE.TextureLoader().load(dogUrl5);
-          let material = new THREE.MeshStandardMaterial({ map: texture });
-          if (m.material) {
-            m.material = material;
-          }
-
-          m.receiveShadow = true;
-          m.userData.ground = true;
-        }
-      }
-      if ((child as THREE.Light).isLight) {
-        const l = child as THREE.Light;
-        l.castShadow = false;
-        l.intensity = l.intensity * 0.000004; // Scaling from blender
-        l.shadow.bias = -0.003;
-        l.shadow.mapSize.width = 1028;
-        l.shadow.mapSize.height = 1028;
-      }
-    });
-    scene.add(gltf.scene);
-  },
-  (xhr) => {
-    console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-  },
-  (error) => {
-    console.log(error);
-  }
-);
+      });
+      scene.add(gltf.scene);
+    },
+    (xhr) => {
+      console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+}
+//loadgltf();
 
 window.addEventListener("resize", onWindowResize, false);
 function onWindowResize() {
@@ -362,10 +314,7 @@ const stats = Stats();
 document.body.appendChild(stats.dom);
 
 //const gui = new GUI();
-/*const LightFolder = gui.addFolder("Light");
-LightFolder.add(light.position, "x", -30, 30);
-LightFolder.add(light.position, "y", -30, 30);
-LightFolder.add(light.position, "z", -30, 30);
+/*const LightFolder = gui.addFolconsole.log("XXXXXXXXX" + dogUrls[0]);"z", -30, 30);
 LightFolder.open();*/
 /*const cameraFolder = gui.addFolder("Camera");
 cameraFolder.add(camera.position, "z", 0, 10);
