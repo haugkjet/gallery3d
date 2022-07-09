@@ -176,15 +176,6 @@ const onKeyUp = function (event: any) {
 document.addEventListener("keydown", onKeyDown);
 document.addEventListener("keyup", onKeyUp);
 
-const value = "Car/Saloon/827365/1728374";
-const parts = value.split("/");
-
-// parts is now a string array, containing:
-// [ "Car", "Saloon", "827365", "1728374" ]
-// So you can get the requested part like this:
-
-const interestingPart = parts[2];
-
 // Get array dog urls
 let dogUrls: string;
 fetch("https://dog.ceo/api/breeds/image/random/5")
@@ -339,6 +330,8 @@ cameraFolder
   .name("camera.fov");
 cameraFolder.open();
 
+let camdirection = false;
+
 function animate() {
   requestAnimationFrame(animate);
 
@@ -384,6 +377,13 @@ function animate() {
   }
 
   prevTime = time;
+
+  if (instructions && instructions.style.display === "") {
+    if (!camdirection && camera.rotation.y < 0.6) camera.rotation.y += 0.001;
+    if (camdirection && camera.rotation.y > -0.6) camera.rotation.y -= 0.001;
+    if (camera.rotation.y <= -0.6) camdirection = false;
+    if (camera.rotation.y >= 0.6) camdirection = true;
+  }
 
   /*if (camera.rotation.y <= -0.98) {
     //console.log(camera.rotation.x);
