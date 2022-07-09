@@ -176,6 +176,15 @@ const onKeyUp = function (event: any) {
 document.addEventListener("keydown", onKeyDown);
 document.addEventListener("keyup", onKeyUp);
 
+const value = "Car/Saloon/827365/1728374";
+const parts = value.split("/");
+
+// parts is now a string array, containing:
+// [ "Car", "Saloon", "827365", "1728374" ]
+// So you can get the requested part like this:
+
+const interestingPart = parts[2];
+
 // Get array dog urls
 let dogUrls: string;
 fetch("https://dog.ceo/api/breeds/image/random/5")
@@ -196,9 +205,17 @@ function loadgltf(dogUrls: string) {
         if ((child as THREE.Mesh).isMesh) {
           const m = child as THREE.Mesh;
           objects.push(m);
+
           if (m.name.includes("Slot1")) {
             const texture = new THREE.TextureLoader().load(dogUrls[0]);
             let material = new THREE.MeshStandardMaterial({ map: texture });
+
+            const parts = dogUrls[0].split("/");
+            const interestingPart = parts[4];
+            console.log(interestingPart);
+
+            loadText(child, interestingPart);
+
             if (m.material) {
               m.material = material;
             }
@@ -206,6 +223,13 @@ function loadgltf(dogUrls: string) {
           if (m.name.includes("Slot2")) {
             const texture = new THREE.TextureLoader().load(dogUrls[1]);
             let material = new THREE.MeshStandardMaterial({ map: texture });
+
+            const parts = dogUrls[1].split("/");
+            const interestingPart = parts[4];
+            console.log(interestingPart);
+
+            loadText(child, interestingPart);
+
             if (m.material) {
               m.material = material;
             }
@@ -216,6 +240,10 @@ function loadgltf(dogUrls: string) {
             if (m.material) {
               m.material = material;
             }
+            const parts = dogUrls[2].split("/");
+            const interestingPart = parts[4];
+            console.log(interestingPart);
+            loadText(child, interestingPart);
           }
           if (m.name.includes("Slot4")) {
             const texture = new THREE.TextureLoader().load(dogUrls[3]);
@@ -223,6 +251,10 @@ function loadgltf(dogUrls: string) {
             if (m.material) {
               m.material = material;
             }
+            const parts = dogUrls[3].split("/");
+            const interestingPart = parts[4];
+            console.log(interestingPart);
+            loadText(child, interestingPart);
           }
           if (m.name.includes("Slot5")) {
             const texture = new THREE.TextureLoader().load(dogUrls[4]);
@@ -230,6 +262,10 @@ function loadgltf(dogUrls: string) {
             if (m.material) {
               m.material = material;
             }
+            const parts = dogUrls[4].split("/");
+            const interestingPart = parts[4];
+            console.log(interestingPart);
+            loadText(child, interestingPart);
           }
         }
         if ((child as THREE.Light).isLight) {
@@ -249,6 +285,36 @@ function loadgltf(dogUrls: string) {
   );
 }
 
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
+
+function loadText(mesh: any, text: any) {
+  const loader = new FontLoader();
+  loader.load("helvetiker_regular.typeface.json", function (font) {
+    const geometry2 = new TextGeometry(text, {
+      font: font,
+      size: 2.5,
+      height: 1.25,
+      curveSegments: 12,
+      bevelEnabled: false,
+    });
+    const textMaterial = new THREE.MeshStandardMaterial({
+      color: 0x000000, //Black
+      //color: 0xffffff, //Light
+    });
+
+    var mesh3 = new THREE.Mesh(geometry2, textMaterial);
+    mesh3.position.set(10, -0.4, -18.4);
+    mesh3.rotation.set(-1.57, 0, 3.14);
+    mesh3.scale.z = 0.001; // Trick to flatten text. Need to properly solve
+
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+
+    mesh.add(mesh3);
+  });
+}
+
 window.addEventListener("resize", onWindowResize, false);
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -261,9 +327,9 @@ function onWindowResize() {
 const stats = Stats();
 document.body.appendChild(stats.dom);
 
-//const gui = new GUI();
-/*const cameraFolder = gui.addFolder("Camera");
-cameraFolder.add(camera.position, "z", 0, 10);
+const gui = new GUI();
+const cameraFolder = gui.addFolder("Camera");
+cameraFolder.add(camera.rotation, "y", -0.98, 0.98);
 
 cameraFolder
   .add(camera, "fov", 0, 150)
@@ -271,7 +337,7 @@ cameraFolder
     camera.updateProjectionMatrix();
   })
   .name("camera.fov");
-cameraFolder.open();*/
+cameraFolder.open();
 
 function animate() {
   requestAnimationFrame(animate);
@@ -318,6 +384,11 @@ function animate() {
   }
 
   prevTime = time;
+
+  /*if (camera.rotation.y <= -0.98) {
+    //console.log(camera.rotation.x);
+    camera.rotation.y += 0.01;
+  } else if (camera.rotation.y <= +0.98) camera.rotation.y -= 0.01;*/
 
   render();
 
