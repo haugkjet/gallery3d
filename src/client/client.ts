@@ -144,7 +144,7 @@ const onKeyDown = function (event: any) {
       camera.position.z = 16;
       camera.position.y = 15.0;
       camera.position.x = 0.0;
-      camera.lookAt(0, 10, 0);
+      camera.lookAt(0, 15, 0);
       break;
   }
 };
@@ -192,7 +192,6 @@ function loadgltf(dogUrls: string) {
     "models/gallery.glb",
     function (gltf) {
       gltf.scene.traverse(function (child) {
-        console.log(child.name);
         if ((child as THREE.Mesh).isMesh) {
           const m = child as THREE.Mesh;
           objects.push(m);
@@ -203,8 +202,6 @@ function loadgltf(dogUrls: string) {
 
             const parts = dogUrls[0].split("/");
             const interestingPart = parts[4];
-            console.log(interestingPart);
-
             loadText(child, interestingPart);
 
             if (m.material) {
@@ -217,8 +214,6 @@ function loadgltf(dogUrls: string) {
 
             const parts = dogUrls[1].split("/");
             const interestingPart = parts[4];
-            console.log(interestingPart);
-
             loadText(child, interestingPart);
 
             if (m.material) {
@@ -233,7 +228,6 @@ function loadgltf(dogUrls: string) {
             }
             const parts = dogUrls[2].split("/");
             const interestingPart = parts[4];
-            console.log(interestingPart);
             loadText(child, interestingPart);
           }
           if (m.name.includes("Slot4")) {
@@ -244,7 +238,6 @@ function loadgltf(dogUrls: string) {
             }
             const parts = dogUrls[3].split("/");
             const interestingPart = parts[4];
-            console.log(interestingPart);
             loadText(child, interestingPart);
           }
           if (m.name.includes("Slot5")) {
@@ -255,7 +248,6 @@ function loadgltf(dogUrls: string) {
             }
             const parts = dogUrls[4].split("/");
             const interestingPart = parts[4];
-            console.log(interestingPart);
             loadText(child, interestingPart);
           }
         }
@@ -315,10 +307,10 @@ function onWindowResize() {
   //controls.handleResize();
 }
 
-const stats = Stats();
-document.body.appendChild(stats.dom);
+//const stats = Stats();
+//document.body.appendChild(stats.dom);
 
-const gui = new GUI();
+/*const gui = new GUI();
 const cameraFolder = gui.addFolder("Camera");
 cameraFolder.add(camera.rotation, "y", -0.98, 0.98);
 
@@ -328,12 +320,17 @@ cameraFolder
     camera.updateProjectionMatrix();
   })
   .name("camera.fov");
-cameraFolder.open();
+cameraFolder.open();*/
 
 let camdirection = false;
 
 function animate() {
   requestAnimationFrame(animate);
+
+  camera.position.clamp(
+    new THREE.Vector3(-70, 0, -130),
+    new THREE.Vector3(70, 0, 20)
+  );
 
   // Code from examples/misc_controls_pointerlock
 
@@ -363,11 +360,14 @@ function animate() {
   if (onObject === true) {
     velocity.y = Math.max(0, velocity.y);
     canJump = true;
+    camera.position.clamp(
+      new THREE.Vector3(-2, 0, -2),
+      new THREE.Vector3(2, 0, 2)
+    );
   }
 
   controls.moveRight(-velocity.x * delta);
   controls.moveForward(-velocity.z * delta);
-
   controls.getObject().position.y += velocity.y * delta; // new behavior
 
   if (controls.getObject().position.y < 10) {
@@ -385,14 +385,9 @@ function animate() {
     if (camera.rotation.y >= 0.6) camdirection = true;
   }
 
-  /*if (camera.rotation.y <= -0.98) {
-    //console.log(camera.rotation.x);
-    camera.rotation.y += 0.01;
-  } else if (camera.rotation.y <= +0.98) camera.rotation.y -= 0.01;*/
-
   render();
 
-  stats.update();
+  //stats.update();
 }
 
 function render() {
